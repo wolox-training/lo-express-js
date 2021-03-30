@@ -11,4 +11,3 @@ exports.defaultError = message => internalError(message, exports.DEFAULT_ERROR);
 
 exports.API_ERROR = 'api_error';
 exports.apiError = message => internalError(message, exports.API_ERROR);
-
