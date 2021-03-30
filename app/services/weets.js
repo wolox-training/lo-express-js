@@ -1,6 +1,7 @@
 const axios = require('axios');
 const logger = require('../logger');
-const { clientAPI, limit } = require('../../config/index.js').common;
+const { clientAPI, limit } = require('../../config').common.quoteAPI;
+const errors = require('../errors');
 
 exports.getRandomQuote = async () => {
     try {
@@ -9,10 +10,11 @@ exports.getRandomQuote = async () => {
                 limit: limit
             }
         });
-        const { data } = response.data;
-        return data[0];
+        const { data: { data: [payload] } } = response;
+        return payload;
+
     } catch (error) {
         logger.error(error);
-        throw Error(error);
+        throw errors.apiError('Something went wrong with external API');
     }
 }
