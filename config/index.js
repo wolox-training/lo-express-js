@@ -44,6 +44,10 @@ const config = {
       apiDate: process.env.API_DATE || 'X-API-Date',
       packageVersion: process.env.PACKAGE_VERSION || 'X-Package-Version',
       nodeVersion: process.env.NODE_VERSION || 'X-Node-Version'
+    },
+    quoteAPI: {
+      limit: process.env.API_LIMIT,
+      clientAPI: process.env.API_QUOTE_URL
     }
   }
 };
