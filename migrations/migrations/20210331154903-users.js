@@ -2,35 +2,38 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('User', {
-      id: {
-        type: Sequelize.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-        allowNull: false,
-        unique: true
+    await queryInterface.createTable(
+      'User',
+      {
+        id: {
+          type: Sequelize.INTEGER,
+          primaryKey: true,
+          autoIncrement: true,
+          allowNull: false,
+          unique: true
+        },
+        firstName: {
+          type: Sequelize.STRING,
+          allowNull: false
+        },
+        lastName: {
+          type: Sequelize.STRING,
+          allowNull: false
+        },
+        email: {
+          type: Sequelize.STRING,
+          allowNull: false,
+          unique: true
+        },
+        password: {
+          type: Sequelize.STRING,
+          allowNull: false
+        }
       },
-      firstName: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      lastName: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      email: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        unique: true
-      },
-      password: {
-        type: Sequelize.STRING,
-        allowNull: false
+      {
+        freezeTableName: true
       }
-    },
-    {
-      freezeTableName: true
-    });
+    );
   },
 
   down: queryInterface => queryInterface.dropTable('User')
