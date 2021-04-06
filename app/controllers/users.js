@@ -1,24 +1,19 @@
 const UserService = require('../services/users');
-const Validators = require('../middlewares/validators/users');
 const logger = require('../logger/index');
-const errors = require('../errors');
 
-exports.signUp = async ({ body }, res) => {
-  const { email, password } = body;
+exports.signUp = async (req, res, next) => {
+  try {
+    const { body } = req;
 
-  if (
-    !Validators.checkEmailRestriction(email) ||
-    !(await Validators.checkExistingEmail(email)) ||
-    !Validators.checkPasswordRestriction(password)
-  ) {
-    throw errors.badRequestError('The submited information contains errors');
+    logger.info(`Starting sign up with email ${body.email}`);
+
+    const userCreated = await UserService.createUser(body);
+
+    logger.info(`User ${userCreated.firstName} created succesfully`);
+
+    return res.status(201).send(userCreated);
+  } catch (error) {
+    logger.error(error);
+    return next(error);
   }
-
-  const encryptedPassword = UserService.encryptPayload(password);
-
-  const userCreated = await UserService.createUser({ ...body, password: encryptedPassword });
-
-  logger.info(`User ${userCreated.firstName} created succesfully`);
-
-  return res.status(201).send(userCreated);
 };

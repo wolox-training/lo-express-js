@@ -1,20 +1,24 @@
-const UserModel = require('../../models/user');
+const { User } = require('../../models');
 const errors = require('../../errors');
 
 exports.checkExistingEmail = async email => {
-  const user = await UserModel.findOne({ where: { email } });
+  const user = await User.findOne({ where: { email } });
 
-  if (user) throw errors.badRequestError('User already exists');
+  if (user) throw errors.conflictError('Trying to create a user that already exists');
+  return false;
 };
 
 exports.checkPasswordRestriction = password => {
-  const isAlphanumericRegex = /[^a-z\d]/i;
+  const isAlphanumericRegex = /[a-zA-Z0-9]{8,61}/;
 
   const isAlphanumeric = isAlphanumericRegex.test(password);
 
-  if (!isAlphanumeric || password.length >= 8) {
-    throw errors.badRequestError('Password should have 8 characters minimum');
+  if (!isAlphanumeric) {
+    throw errors.badRequestError(
+      'Password should have 8 characters minimum and only alphanumeric characters'
+    );
   }
+  return isAlphanumeric;
 };
 
 exports.checkEmailRestriction = email => {
@@ -25,4 +29,5 @@ exports.checkEmailRestriction = email => {
   if (!isAWoloxDomain) {
     throw errors.badRequestError('The domain is not part of Wolox');
   }
+  return isAWoloxDomain;
 };

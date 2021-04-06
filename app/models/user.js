@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(
-    'user',
+    'User',
     {
       id: {
         type: DataTypes.INTEGER,
@@ -22,28 +22,21 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         unique: true,
         validate: {
-          is: '^[a-zA-Z]+.[a-zA-Z]+@wolox.+[(co|ar|cl|mx)]$'
+          is: '^[a-zA-Z]+.[a-zA-Z]+@wolox.+((co)|(ar)|(mx))$'
         }
       },
       password: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-          isAlphanumeric: true,
-          len: [8, 30]
+          len: [8, 61]
         }
-      },
-      createdAt: {
-        type: DataTypes.DATE,
-        allowNull: false
-      },
-      updatedAt: {
-        type: DataTypes.DATE,
-        allowNull: false
       }
     },
     {
-      timestamps: true
+      timestamps: true,
+      tableName: 'users',
+      freezeTableName: true
     }
   );
   return User;

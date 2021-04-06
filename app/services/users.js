@@ -1,29 +1,27 @@
-const bcrypt = require('bcrypt');
-
-const User = require('../models/user');
+const { User } = require('../models');
 const logger = require('../logger/index');
 const errors = require('../errors');
+const Validators = require('../middlewares/validators/users');
+const helpers = require('../helpers/users');
 
 exports.createUser = async payload => {
   try {
-    const [user, created] = await User.create({ where: { email: payload.email }, defaults: payload });
+    const body = payload;
+    if (
+      !Validators.checkEmailRestriction(body.email) ||
+      (await Validators.checkExistingEmail(body.email)) ||
+      !Validators.checkPasswordRestriction(body.password)
+    ) {
+      throw errors.badRequestError('The submited information contains errors');
+    }
 
-    if (!created) throw errors.badRequestError('User already exists');
+    body.password = await helpers.encryptPayload(payload.password);
 
-    return user;
+    const userCreated = await User.create(body);
+
+    return userCreated;
   } catch (error) {
     logger.error(error);
-    throw errors.databaseError('Unable to create new user in the Database');
-  }
-};
-
-exports.encryptPayload = async payload => {
-  try {
-    const hashed = await bcrypt.hash(payload, 10);
-
-    return hashed;
-  } catch (error) {
-    logger.error(error);
-    throw errors.defaultError('Something went wrong trying to encrypt password');
+    throw Error(error);
   }
 };
