@@ -9,7 +9,7 @@
   "scripts": {
     "console": "node console.js",
     "cover": "npm run test -- --coverage",
-    "test": "NODE_ENV=testing jest --runInBand --forceExit --detectOpenHandles",
+    "test": "NODE_ENV=testing jest --runInBand --forceExit ",
     "test-inspect": "NODE_ENV=testing node --inspect --debug-brk jest",
     "eslint-check": "eslint --print-config .eslintrc.js --ignore-pattern ./.eslintrc.js | eslint-config-prettier-check",
     "lint": "eslint \"**/*.js\" --ignore-pattern ./.eslintrc.js",
@@ -20,6 +20,7 @@
     "start-dev": "nodemon --inspect server.js",
     "prestart-dev": "npm run lint",
     "migrations": "sequelize db:migrate",
+    "migration-test": "NODE_ENV=testing sequelize db:migrate",
     "start": "node server.js",
     "seed": "sequelize db:seed:all",
     "create-seed": "sequelize seed:generate --name"
