@@ -18,5 +18,5 @@ exports.badRequestError = message => internalError(message, exports.BAD_REQUEST_
 exports.NOT_FOUND_ERROR = 'not_found_error';
 exports.notFoundError = message => internalError(message, exports.NOT_FOUND_ERROR);
 
-exports.CONFLICT_ERROR = 'conflct_error';
+exports.CONFLICT_ERROR = 'conflict_error';
 exports.conflictError = message => internalError(message, exports.CONFLICT_ERROR);
