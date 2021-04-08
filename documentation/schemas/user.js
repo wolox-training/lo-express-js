@@ -3,15 +3,15 @@ module.exports = {
     type: 'string',
     example: 'tom.engels@wolox.ar'
   },
-  userPassword:{
+  userPassword: {
     type: 'string',
     example: 'luis12345'
   },
-  userFirstName:{
+  userFirstName: {
     type: 'string',
     example: 'Luis'
   },
-  userLastName:{
+  userLastName: {
     type: 'string',
     example: 'Ochoa'
   },
@@ -27,7 +27,7 @@ module.exports = {
       email: {
         $ref: '#/components/schemas/userEmail'
       },
-      password:{
+      password: {
         $ref: '#/components/schemas/userPassword'
       }
     }

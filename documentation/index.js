@@ -24,7 +24,7 @@ module.exports = {
     {
       url: `http://localhost:${port}/`,
       description: 'Local server'
-    },
+    }
   ],
   security: [],
   tags: [
