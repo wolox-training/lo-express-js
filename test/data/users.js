@@ -8,7 +8,7 @@ exports.user = {
 exports.repeatedUser = {
   firstName: 'luis',
   lastName: 'ochoa',
-  email: 'luis.ochoa@wolox.co',
+  email: 'luiss.ochoa@wolox.co',
   password: 'luis1023123'
 }
 
