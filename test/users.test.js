@@ -3,9 +3,12 @@ const truncateDatabase = require('./setup');
 const app = require('../app');
 const { user, repeatedUser, passwordUser, missingUser } = require('../test/data/users');
 
-beforeAll(async () => {
-  await truncateDatabase();
-});
+ beforeEach(async() => {
+   const response = await request(app)
+    .post('/users')
+    .set('Accept', 'application/json')
+    .send(repeatedUser);
+ });
 
 describe('POST /users - Signup', () => {
   let response;
@@ -37,26 +40,20 @@ describe('POST /users - Signup Failed - Repeated User', () => {
     let response;
     let status;
     let message;
-    let response2;
-    beforeAll(async () => {
-        response = await request(app)
-          .post('/users')
-          .set('Accept', 'application/json')
-          .send(repeatedUser);
-
-          response2 = await request(app)
-          .post('/users')
-          .set('Accept', 'application/json')
-          .send(repeatedUser);
+      beforeAll(async () => {
+      response = await request(app)
+      .post('/users')
+      .set('Accept', 'application/json')
+      .send(repeatedUser);
   
         ({
           body: { message },
           status
-        } = response2);
+        } = response);
       
     });
   
-    it('Should signUp a new User successfully', () => {
+    it('Should fail and display an existing user message', () => {
       expect(message).toBe('Trying to create a user that already exists');
     });
   
@@ -82,7 +79,7 @@ describe('POST /users - Signup Failed - Repeated User', () => {
       
     });
   
-    it('Should signUp a new User successfully', () => {
+    it('Should fail and display a password message', () => {
       expect(message).toBe('Password should have 8 characters minimum and only alphanumeric characters');
     });
   
@@ -112,7 +109,7 @@ describe('POST /users - Signup Failed - Repeated User', () => {
       
     });
   
-    it('Should signUp a new User successfully', () => {
+    it('Should fail displaying a message', () => {
       expect(message).toBe('There are missing fields');
     });
   
