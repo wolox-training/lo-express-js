@@ -25,15 +25,11 @@ module.exports = {
       url: `http://localhost:${port}/`,
       description: 'Local server'
     },
-    {
-      url: 'https://api_url_testing',
-      description: 'Testing server'
-    }
   ],
   security: [],
   tags: [
     {
-      name: 'CRUD operations'
+      name: 'User Operations'
     }
   ],
   paths,
