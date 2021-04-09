@@ -1,23 +1,17 @@
 const request = require('supertest');
-const truncateDatabase = require('./setup');
 const app = require('../app');
-const { user, repeatedUser, passwordUser, missingUser } = require('../test/data/users');
-
- beforeEach(async() => {
-   const response = await request(app)
-    .post('/users')
-    .set('Accept', 'application/json')
-    .send(repeatedUser);
- });
+const { user, repeatedUser, passwordUser, missingPropertyUser } = require('../test/data/users');
 
 describe('POST /users - Signup', () => {
+  /*eslint-disable */
   let response;
   let status;
   let lastName;
+  /*eslint-disable */
+
   beforeAll(async () => {
       response = await request(app)
         .post('/users')
-        .set('Accept', 'application/json')
         .send(user);
 
       ({
@@ -27,7 +21,7 @@ describe('POST /users - Signup', () => {
     
   });
 
-  it('Should signUp a new User successfully', () => {
+  it('Should return property lastName saved in database', () => {
     expect(lastName).toBe(user.lastName);
   });
 
@@ -37,13 +31,21 @@ describe('POST /users - Signup', () => {
 });
 
 describe('POST /users - Signup Failed - Repeated User', () => {
+  /*eslint-disable */
     let response;
     let status;
     let message;
+  /*eslint-disable */
+
+  beforeAll(async() => {
+    const response = await request(app)
+     .post('/users')
+     .send(repeatedUser);
+  });
+    
       beforeAll(async () => {
       response = await request(app)
       .post('/users')
-      .set('Accept', 'application/json')
       .send(repeatedUser);
   
         ({
@@ -63,13 +65,15 @@ describe('POST /users - Signup Failed - Repeated User', () => {
   });
 
   describe('POST /users - Password restriction', () => {
+    /*eslint-disable */
     let response;
     let status;
     let message;
+    /*eslint-disable */
+
     beforeAll(async () => {
         response = await request(app)
           .post('/users')
-          .set('Accept', 'application/json')
           .send(passwordUser);
   
         ({
@@ -87,20 +91,21 @@ describe('POST /users - Signup Failed - Repeated User', () => {
       expect(status).toBe(400);
     });
 
-    it('Should return status code 400', () => {
+    it('Should return an internal code error', () => {
       expect(internal_code).toBe('bad_request_error');
     });
   });
 
   describe('POST /users - Missing attribute', () => {
+    /*eslint-disable */
     let response;
     let status;
     let message;
+    /*eslint-disable */
     beforeAll(async () => {
         response = await request(app)
           .post('/users')
-          .set('Accept', 'application/json')
-          .send(missingUser);
+          .send(missingPropertyUser);
   
         ({
           body: { message, internal_code },
@@ -117,7 +122,7 @@ describe('POST /users - Signup Failed - Repeated User', () => {
       expect(status).toBe(400);
     });
 
-    it('Should return status code 400', () => {
+    it('Should return an internal code error', () => {
       expect(internal_code).toBe('bad_request_error');
     });
   });

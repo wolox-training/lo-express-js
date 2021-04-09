@@ -8,19 +8,19 @@ exports.user = {
 exports.repeatedUser = {
   firstName: 'luis',
   lastName: 'ochoa',
-  email: 'luiss.ochoa@wolox.co',
+  email: 'luis.ochddoa@wolox.co',
   password: 'luis1023123'
-}
+};
 
 exports.passwordUser = {
   firstName: 'luis',
   lastName: 'ochoa',
   email: 'luis.ochoa@wolox.co',
   password: 'luis10'
-}
+};
 
-exports.missingUser = {
+exports.missingPropertyUser = {
   lastName: 'ochoa',
   email: 'luis.ochoa@wolox.co',
   password: 'luis1asda0'
-}
+};
