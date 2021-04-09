@@ -36,14 +36,13 @@ describe('POST /users - Signup Failed - Repeated User', () => {
     let status;
     let message;
   /*eslint-disable */
-
-  beforeAll(async() => {
-    const response = await request(app)
-     .post('/users')
-     .send(repeatedUser);
-  });
     
       beforeAll(async () => {
+
+        await request(app)
+     .post('/users')
+     .send(repeatedUser);
+
       response = await request(app)
       .post('/users')
       .send(repeatedUser);
