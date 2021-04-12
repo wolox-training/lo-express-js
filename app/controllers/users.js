@@ -21,3 +21,15 @@ exports.signUp = async (req, res, next) => {
     return next(error);
   }
 };
+
+exports.signIn = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    logger.info(`Authenticating user with email: ${JSON.stringify(email)}`);
+    const response = await UserService.authenticateUser(email);
+    return res.status(200).send(response);
+  } catch (error) {
+    logger.error(error);
+    return next(error);
+  }
+};
