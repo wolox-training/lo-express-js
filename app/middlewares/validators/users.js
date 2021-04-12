@@ -4,7 +4,9 @@ const errors = require('../../errors');
 exports.checkExistingEmail = async email => {
   const user = await User.findOne({ where: { email } });
 
-  if (user) throw errors.conflictError('Trying to create a user that already exists');
+  if (user) {
+    throw errors.conflictError('Trying to create a user that already exists');
+  }
   return false;
 };
 
@@ -30,4 +32,23 @@ exports.checkEmailRestriction = email => {
     throw errors.badRequestError('The domain is not part of Wolox');
   }
   return isAWoloxDomain;
+};
+
+exports.validatePayload = payload => {
+  if (payload.email && payload.password && payload.firstName && payload.lastName) {
+    return false;
+  }
+  throw errors.badRequestError('There are missing fields');
+};
+
+exports.runValidations = async body => {
+  try {
+    this.validatePayload(body);
+    this.checkEmailRestriction(body.email);
+    await this.checkExistingEmail(body.email);
+    this.checkPasswordRestriction(body.password);
+    return;
+  } catch (error) {
+    throw error;
+  }
 };
