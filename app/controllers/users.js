@@ -1,6 +1,5 @@
 const UserService = require('../services/users');
 const logger = require('../logger/index');
-const Validators = require('../middlewares/validators/users');
 const helpers = require('../helpers/users');
 
 exports.signUp = async (req, res, next) => {
@@ -8,17 +7,15 @@ exports.signUp = async (req, res, next) => {
     const { body } = req;
     const payload = body;
 
-    await Validators.runValidations(body);
-
     body.password = await helpers.encryptPayload(payload.password);
 
     logger.info(`Starting sign up with email ${body.email}`);
 
-    const userCreated = await UserService.createUser(body);
+    const { firstName, lastName, email, createdAt } = await UserService.createUser(body);
 
-    logger.info(`User ${userCreated.firstName} created succesfully`);
+    logger.info(`User ${firstName} created succesfully`);
 
-    return res.status(201).send(userCreated);
+    return res.status(201).send({ firstName, lastName, email, createdAt });
   } catch (error) {
     logger.error(error);
     return next(error);
