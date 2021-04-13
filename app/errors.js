@@ -21,5 +21,5 @@ exports.notFoundError = message => internalError(message, exports.NOT_FOUND_ERRO
 exports.CONFLICT_ERROR = 'conflict_error';
 exports.conflictError = message => internalError(message, exports.CONFLICT_ERROR);
 
-exports.SCHEMA = 'schema_error';
-exports.schemaError = message => internalError(message, exports.SCHEMA);
+exports.SCHEMA_ERROR = 'schema_error';
+exports.schemaError = message => internalError(message, exports.SCHEMA_ERROR);

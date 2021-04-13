@@ -22,7 +22,7 @@ describe('POST /users - Signup', () => {
   });
 
   it('Should return property lastName saved in database', () => {
-    expect(lastName).toBe(user.lastName);
+    expect(lastName).toBe(user.last_name);
   });
 
   it('Should return status code 201', () => {
@@ -83,15 +83,15 @@ describe('POST /users - Signup Failed - Repeated User', () => {
     });
   
     it('Should fail and display a password message', () => {
-      expect(message).toBe('Password should have 8 characters minimum and only alphanumeric characters');
+      expect(message).toBe('Password should be at least 8 characters');
     });
   
-    it('Should return status code 400', () => {
-      expect(status).toBe(400);
+    it('Should return status code 422', () => {
+      expect(status).toBe(422);
     });
 
     it('Should return an internal code error', () => {
-      expect(internal_code).toBe('bad_request_error');
+      expect(internal_code).toBe('schema_error');
     });
   });
 
@@ -114,14 +114,14 @@ describe('POST /users - Signup Failed - Repeated User', () => {
     });
   
     it('Should fail displaying a message', () => {
-      expect(message).toBe('There are missing fields');
+      expect(message).toBe('firstName is required');
     });
   
-    it('Should return status code 400', () => {
-      expect(status).toBe(400);
+    it('Should return status code 422', () => {
+      expect(status).toBe(422);
     });
 
     it('Should return an internal code error', () => {
-      expect(internal_code).toBe('bad_request_error');
+      expect(internal_code).toBe('schema_error');
     });
   });

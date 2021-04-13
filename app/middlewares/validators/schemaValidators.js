@@ -1,11 +1,13 @@
 const { checkSchema, validationResult } = require('express-validator');
+const logger = require('../../logger');
 
 const errors = require('../../errors');
 
 const validateResult = (req, _, next) => {
   const err = validationResult(req);
   if (!err.isEmpty()) {
-    return next(errors.schemaError(err.mapped()));
+    logger.info(`Error está compuesto de: ${JSON.stringify()}`);
+    return next(errors.schemaError(err.errors[0].msg));
   }
   return next();
 };
