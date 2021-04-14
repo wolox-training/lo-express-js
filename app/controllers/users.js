@@ -34,3 +34,14 @@ exports.signIn = async (req, res, next) => {
     return next(error);
   }
 };
+
+exports.getUsers = async (req, res, next) => {
+  try {
+    const { pagination } = req.query;
+    const allUsers = await UserService.getUsers(pagination);
+    return res.status(200).send(allUsers);
+  } catch (error) {
+    logger.error(error);
+    return next(error);
+  }
+};

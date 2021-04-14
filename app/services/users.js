@@ -12,3 +12,14 @@ exports.createUser = async payload => {
     throw errors.databaseError('Something went wrong trying to save into the DB');
   }
 };
+
+exports.getUsers = async pagination => {
+  try {
+    const allUsers = await User.findAll({ offset: 0, limit: pagination });
+
+    return allUsers;
+  } catch (error) {
+    logger.error(error);
+    throw errors.databaseError('Error trying to fetch data from the DB');
+  }
+};

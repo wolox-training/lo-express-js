@@ -38,3 +38,7 @@ exports.wrongDomainUser = {
   first_name: 'Luis',
   last_name: 'Ochoa'
 };
+
+exports.pagination = {
+  pagination: 1
+};

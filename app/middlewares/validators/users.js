@@ -1,7 +1,10 @@
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const { User } = require('../../models');
 const errors = require('../../errors');
+const config = require('../../../config');
+const logger = require('../../logger');
 
 exports.checkExistingEmail = async (req, _, next) => {
   const { email } = req.body;
@@ -20,4 +23,25 @@ exports.findAndDecryptPassword = async (req, _, next) => {
     return next();
   }
   return next(errors.badRequestError('Wrong user or password'));
+};
+
+exports.verifyToken = (req, _, next) => {
+  try {
+    const {
+      common: {
+        session: { secret }
+      }
+    } = config;
+    const token = req.headers.authorization;
+
+    if (!token) {
+      return next(errors.loginError('Unauthorized user'));
+    }
+
+    jwt.verify(token, secret);
+    return next();
+  } catch (error) {
+    logger.error(error);
+    return next(errors.loginError('Token invalid'));
+  }
 };
