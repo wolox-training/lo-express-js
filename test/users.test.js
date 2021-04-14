@@ -29,7 +29,7 @@ describe('POST /users - Signup', () => {
   });
 
   it('Should return property lastName saved in database', () => {
-    expect(lastName).toBe(user.lastName);
+    expect(lastName).toBe(user.last_name);
   });
 
   it('Should return status code 201', () => {
@@ -90,11 +90,11 @@ describe('POST /users - Signup Failed - Repeated User', () => {
     });
   
     it('Should fail and display a password message', () => {
-      expect(message.password.msg).toBe('Password should be at least 8 characters');
+      expect(message).toBe('Password should be at least 8 characters');
     });
   
-    it('Should return status code 400', () => {
-      expect(status).toBe(400);
+    it('Should return status code 422', () => {
+      expect(status).toBe(422);
     });
 
     it('Should return an internal code error', () => {
@@ -121,11 +121,11 @@ describe('POST /users - Signup Failed - Repeated User', () => {
     });
   
     it('Should fail displaying a message', () => {
-      expect(message.firstName.msg).toBe('firstName is required');
+      expect(message).toBe('firstName is required');
     });
   
-    it('Should return status code 400', () => {
-      expect(status).toBe(400);
+    it('Should return status code 422', () => {
+      expect(status).toBe(422);
     });
 
     it('Should return an internal code error', () => {
@@ -159,7 +159,7 @@ describe('POST /users - Signup Failed - Repeated User', () => {
       expect(email).toBe(signUpUser.email);
     });
   
-    it('Should return status code 400', () => {
+    it('Should return status code 200', () => {
       expect(status).toBe(200);
     });
 
@@ -192,11 +192,11 @@ describe('POST /users - Signup Failed - Repeated User', () => {
     });
   
     it('Should display an error message', () => {
-      expect(message.email.msg).toBe('email not part of Wolox');
+      expect(message).toBe('email not part of Wolox');
     });
   
-    it('Should return status code 400', () => {
-      expect(status).toBe(400);
+    it('Should return status code 422', () => {
+      expect(status).toBe(422);
     });
 
     it('Should have a message property', () => {

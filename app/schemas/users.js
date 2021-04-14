@@ -1,15 +1,17 @@
 const emailRegex = /^[a-zA-Z]+\.[a-zA-Z]+@wolox.+((co)|(ar)|(mx))$/;
 
 exports.userSchema = {
-  firstName: {
+  first_name: {
     in: ['body'],
+    field: 'firstName',
     isEmpty: {
       negated: true,
       errorMessage: 'firstName is required'
     }
   },
-  lastName: {
+  last_name: {
     in: ['body'],
+    field: 'lastName',
     isEmpty: {
       negated: true,
       errorMessage: 'lastName is required'
@@ -57,10 +59,6 @@ exports.signInSchema = {
     isEmpty: {
       negated: true,
       errorMessage: 'password is required'
-    },
-    isLength: {
-      errorMessage: 'Password should be at least 8 characters',
-      options: { min: 8 }
     }
   }
 };

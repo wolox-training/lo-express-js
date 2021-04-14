@@ -1,17 +1,18 @@
 const UserService = require('../services/users');
 const logger = require('../logger/index');
 const helpers = require('../helpers/users');
+const { formatUserInput } = require('../mappers/users');
 
 exports.signUp = async (req, res, next) => {
   try {
     const { body } = req;
-    const payload = body;
+    const payload = formatUserInput(body);
 
-    body.password = await helpers.encryptPayload(payload.password);
+    payload.password = await helpers.encryptPayload(body.password);
 
     logger.info(`Starting sign up with email ${body.email}`);
 
-    const { firstName, lastName, email, createdAt } = await UserService.createUser(body);
+    const { firstName, lastName, email, createdAt } = await UserService.createUser(payload);
 
     logger.info(`User ${firstName} created succesfully`);
 
@@ -26,7 +27,7 @@ exports.signIn = async (req, res, next) => {
   try {
     const { email } = req.body;
     logger.info(`Authenticating user with email: ${JSON.stringify(email)}`);
-    const response = await UserService.authenticateUser(email);
+    const response = await helpers.authenticateUser(email);
     return res.status(200).send(response);
   } catch (error) {
     logger.error(error);
