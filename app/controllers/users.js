@@ -29,8 +29,8 @@ exports.signIn = async (req, res, next) => {
     const { email, password } = req.body;
     await findAndDecryptPassword(email, password);
     logger.info(`Authenticating user with email: ${JSON.stringify(email)}`);
-    const response = await helpers.generateToken(email);
-    return res.status(200).send(response);
+    const { payload, token } = await helpers.generateToken(email);
+    return res.status(200).send({ email: payload, token });
   } catch (error) {
     logger.error(error);
     return next(error);
