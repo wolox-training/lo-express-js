@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 
 const logger = require('../logger/index');
 const errors = require('../errors');
-const { secret } = require('../../config').common.session;
+const { secret, token_ttl } = require('../../config').common.session;
 
 exports.encryptPayload = async payload => {
   try {
@@ -16,11 +16,11 @@ exports.encryptPayload = async payload => {
   }
 };
 
-exports.authenticateUser = email => {
+exports.generateToken = payload => {
   try {
-    const token = jwt.sign({ email }, secret, { expiresIn: '6h' });
+    const token = jwt.sign({ payload }, secret, { expiresIn: token_ttl });
     logger.info('Token generated successfully');
-    return { email, token };
+    return { payload, token };
   } catch (error) {
     logger.error(error);
     throw error;
