@@ -2,6 +2,7 @@ const UserService = require('../services/users');
 const logger = require('../logger/index');
 const helpers = require('../helpers/users');
 const { formatUserInput } = require('../mappers/users');
+const { findAndDecryptPassword } = require('../interactors/users');
 
 exports.signUp = async (req, res, next) => {
   try {
@@ -12,11 +13,11 @@ exports.signUp = async (req, res, next) => {
 
     logger.info(`Starting sign up with email ${body.email}`);
 
-    const { firstName, lastName, email, createdAt } = await UserService.createUser(payload);
+    const response = await UserService.createUser(payload);
 
-    logger.info(`User ${firstName} created succesfully`);
+    logger.info(`User ${response.first_name} created succesfully`);
 
-    return res.status(201).send({ firstName, lastName, email, createdAt });
+    return res.status(201).send(response);
   } catch (error) {
     logger.error(error);
     return next(error);
@@ -25,10 +26,11 @@ exports.signUp = async (req, res, next) => {
 
 exports.signIn = async (req, res, next) => {
   try {
-    const { email } = req.body;
+    const { email, password } = req.body;
+    await findAndDecryptPassword(email, password);
     logger.info(`Authenticating user with email: ${JSON.stringify(email)}`);
-    const response = await helpers.authenticateUser(email);
-    return res.status(200).send(response);
+    const { payload, token } = helpers.generateToken(email);
+    return res.status(200).send({ email: payload, token });
   } catch (error) {
     logger.error(error);
     return next(error);
@@ -37,8 +39,8 @@ exports.signIn = async (req, res, next) => {
 
 exports.getUsers = async (req, res, next) => {
   try {
-    const { pagination } = req.query;
-    const allUsers = await UserService.getUsers(pagination);
+    const { page, limit } = req.query;
+    const allUsers = await UserService.getUsers(page, limit);
     return res.status(200).send(allUsers);
   } catch (error) {
     logger.error(error);

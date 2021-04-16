@@ -40,5 +40,6 @@ exports.wrongDomainUser = {
 };
 
 exports.pagination = {
-  pagination: 1
+  page: 1,
+  limit: 1
 };

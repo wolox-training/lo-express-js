@@ -133,7 +133,7 @@ describe('POST /users/sessions - Sign In', () => {
         response = await request(app)
           .get('/users')
           .set('Authorization', token)
-          .send({pagination});
+          .query({page: pagination.page,limit: pagination.limit});
   
         ({
           body,

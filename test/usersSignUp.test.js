@@ -15,14 +15,14 @@ describe('POST /users - Signup', () => {
         .send(user);
 
       ({
-        body: { lastName },
+        body: { last_name },
         status
       } = response);
     
   });
 
   it('Should return property lastName saved in database', () => {
-    expect(lastName).toBe(user.last_name);
+    expect(last_name).toBe(user.last_name);
   });
 
   it('Should return status code 201', () => {
