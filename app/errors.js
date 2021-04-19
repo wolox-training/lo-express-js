@@ -26,3 +26,6 @@ exports.schemaError = message => internalError(message, exports.SCHEMA_ERROR);
 
 exports.LOGIN_ERROR = 'login_error';
 exports.loginError = message => internalError(message, exports.LOGIN_ERROR);
+
+exports.AUTHORIZATION_ERROR = 'authorization_error';
+exports.authorizationError = message => internalError(message, exports.AUTHORIZATION_ERROR);

@@ -1,18 +1,35 @@
 const request = require('supertest');
 const app = require('../app');
-const { user, repeatedUser, passwordUser, missingPropertyUser } = require('../test/data/users');
+const { createAdmin } = require('../app/services/users');
+const { adminUser, repeatedUser, passwordUser, missingPropertyUser } = require('../test/data/users');
+const { formatUserInput } = require('../app/mappers/users');
+const helpers = require('../app/helpers/users');
 
-describe('POST /users - Signup', () => {
+describe('POST /admin/users - Signup a new Admin', () => {
   /*eslint-disable */
   let response;
   let status;
   let last_name;
+  let signedInUser;
+  let password;
+  let payload;
   /*eslint-disable */
 
   beforeAll(async () => {
-      response = await request(app)
-        .post('/users')
-        .send(user);
+        ({password} = adminUser);
+        adminUser.password = await helpers.encryptPayload(password);
+         created = await createAdmin(formatUserInput(adminUser)); 
+
+         signedInUser = await request(app)
+          .post('/users/sessions')
+          .send({email: adminUser.email, password: password});
+
+          payload = JSON.parse(signedInUser.text);
+            
+          response = await request(app)
+          .post('/admin/users')
+          .set('Authorization', payload.token)
+          .send(repeatedUser);
 
       ({
         body: { last_name },
@@ -22,7 +39,7 @@ describe('POST /users - Signup', () => {
   });
 
   it('Should return property lastName saved in database', () => {
-    expect(last_name).toBe(user.last_name);
+    expect(last_name).toBe(repeatedUser.last_name);
   });
 
   it('Should return status code 201', () => {
@@ -30,40 +47,7 @@ describe('POST /users - Signup', () => {
   });
 });
 
-describe('POST /users - Signup Failed - Repeated User', () => {
-  /*eslint-disable */
-    let response;
-    let status;
-    let message;
-  /*eslint-disable */
-    
-      beforeAll(async () => {
-
-        await request(app)
-     .post('/users')
-     .send(repeatedUser);
-
-      response = await request(app)
-      .post('/users')
-      .send(repeatedUser);
-  
-        ({
-          body: { message },
-          status
-        } = response);
-      
-    });
-  
-    it('Should fail and display an existing user message', () => {
-      expect(message).toBe('Trying to create a user that already exists');
-    });
-  
-    it('Should return status code 409', () => {
-      expect(status).toBe(409);
-    });
-  });
-
-  describe('POST /users - Password restriction', () => {
+  describe('POST /admin/users - Password restriction', () => {
     /*eslint-disable */
     let response;
     let status;
@@ -71,8 +55,9 @@ describe('POST /users - Signup Failed - Repeated User', () => {
     /*eslint-disable */
 
     beforeAll(async () => {
-        response = await request(app)
-          .post('/users')
+            
+          response = await request(app)
+          .post('/admin/users')
           .send(passwordUser);
   
         ({
@@ -95,7 +80,7 @@ describe('POST /users - Signup Failed - Repeated User', () => {
     });
   });
 
-  describe('POST /users - Missing attribute', () => {
+  describe('POST /admin/users - Missing attribute', () => {
     /*eslint-disable */
     let response;
     let status;

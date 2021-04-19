@@ -2,7 +2,8 @@ exports.config = {
   environment: 'production',
   common: {
     database: {
-      name: process.env.DB_NAME
+      name: process.env.DB_NAME,
+      admin_role: process.env.ADMIN_ROLE
     },
     session: {
       secret: 'some-super-secret',
