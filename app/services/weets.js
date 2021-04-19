@@ -34,3 +34,17 @@ exports.saveWeet = async (userId, content) => {
     throw errors.databaseError('Something went wrong saving new Weet');
   }
 };
+
+exports.getAllWeets = async (page, weetLimit) => {
+  try {
+    let offset = 0;
+    offset += (page - 1) * weetLimit;
+    const allWeets = await Weet.findAll({ offset, limit: weetLimit });
+
+    const response = await allWeets.map(user => formatWeetOutput(user));
+    return response;
+  } catch (error) {
+    logger.error(error);
+    throw errors.databaseError('Error trying to fetch data from the DB');
+  }
+};
