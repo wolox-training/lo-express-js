@@ -24,3 +24,17 @@ exports.missingPropertyUser = {
   email: 'luis.ochoa@wolox.co',
   password: 'luis1asda0'
 };
+
+exports.signUpUser = {
+  email: 'test.test@wolox.co',
+  password: 'luis12345',
+  first_name: 'Luis',
+  last_name: 'Ochoa'
+};
+
+exports.wrongDomainUser = {
+  email: 'test.test@wolox.au',
+  password: 'luis12345',
+  first_name: 'Luis',
+  last_name: 'Ochoa'
+};

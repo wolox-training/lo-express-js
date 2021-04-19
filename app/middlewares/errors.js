@@ -10,6 +10,7 @@ const statusCodes = {
   [errors.BAD_REQUEST_ERROR]: 400,
   [errors.NOT_FOUND_ERROR]: 404,
   [errors.CONFLICT_ERROR]: 409,
+  [errors.LOGIN_ERROR]: 403,
   [errors.SCHEMA_ERROR]: 422
 };
 

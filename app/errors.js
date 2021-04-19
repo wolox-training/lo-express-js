@@ -23,3 +23,6 @@ exports.conflictError = message => internalError(message, exports.CONFLICT_ERROR
 
 exports.SCHEMA_ERROR = 'schema_error';
 exports.schemaError = message => internalError(message, exports.SCHEMA_ERROR);
+
+exports.LOGIN_ERROR = 'login_error';
+exports.loginError = message => internalError(message, exports.LOGIN_ERROR);

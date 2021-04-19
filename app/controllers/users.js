@@ -2,6 +2,7 @@ const UserService = require('../services/users');
 const logger = require('../logger/index');
 const helpers = require('../helpers/users');
 const { formatUserInput } = require('../mappers/users');
+const { findAndDecryptPassword } = require('../interactors/users');
 
 exports.signUp = async (req, res, next) => {
   try {
@@ -17,6 +18,19 @@ exports.signUp = async (req, res, next) => {
     logger.info(`User ${firstName} created succesfully`);
 
     return res.status(201).send({ firstName, lastName, email, createdAt });
+  } catch (error) {
+    logger.error(error);
+    return next(error);
+  }
+};
+
+exports.signIn = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    await findAndDecryptPassword(email, password);
+    logger.info(`Authenticating user with email: ${JSON.stringify(email)}`);
+    const { payload, token } = await helpers.generateToken(email);
+    return res.status(200).send({ email: payload, token });
   } catch (error) {
     logger.error(error);
     return next(error);

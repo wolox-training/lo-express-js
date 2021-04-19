@@ -41,3 +41,24 @@ exports.userSchema = {
     errorMessage: 'Password only should have alphanumeric characters'
   }
 };
+
+exports.signInSchema = {
+  email: {
+    in: ['body'],
+    isEmpty: {
+      negated: true,
+      errorMessage: 'email is required'
+    },
+    custom: {
+      options: email => emailRegex.test(email),
+      errorMessage: 'email not part of Wolox'
+    },
+    errorMessage: 'something is wrong with the email'
+  },
+  password: {
+    isEmpty: {
+      negated: true,
+      errorMessage: 'password is required'
+    }
+  }
+};
