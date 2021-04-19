@@ -39,3 +39,15 @@ exports.verifyAdmin = async (req, _, next) => {
   }
   return next();
 };
+
+exports.idVerify = async (req, _, next) => {
+  const { payload } = req.token;
+  const user = await User.findOne({ where: { email: payload } });
+
+  if (!user) {
+    return next(errors.notFoundError('UserId not found'));
+  }
+
+  req.userId = user.id; // eslint-disable-line
+  return next();
+};

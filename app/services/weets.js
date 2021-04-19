@@ -2,6 +2,8 @@ const axios = require('axios');
 const logger = require('../logger');
 const { clientAPI, limit } = require('../../config').common.quoteAPI;
 const errors = require('../errors');
+const { Weet } = require('../models');
+const { formatWeetOutput } = require('../serializers/weets');
 
 exports.getRandomQuote = async () => {
   try {
@@ -19,5 +21,16 @@ exports.getRandomQuote = async () => {
   } catch (error) {
     logger.error(error);
     throw errors.apiError('Something went wrong with external API');
+  }
+};
+
+exports.saveWeet = async (userId, content) => {
+  try {
+    const weetCreated = await Weet.create({ userId, content });
+
+    return formatWeetOutput(weetCreated);
+  } catch (error) {
+    logger.error(error);
+    throw errors.databaseError('Something went wrong saving new Weet');
   }
 };
