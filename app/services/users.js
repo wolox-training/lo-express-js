@@ -16,7 +16,7 @@ exports.createUser = async payload => {
 
 exports.getUsers = async (page, limit) => {
   try {
-    const offset = 0 + (page-1) * limit; // eslint-disable-line
+    const offset = 0 + (page - 1) * limit; // eslint-disable-line no-mixed-operators
     const allUsers = await User.findAll({ offset, limit });
 
     const response = await allUsers.map(user => formatUserOutput(user));
