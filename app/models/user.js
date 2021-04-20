@@ -36,6 +36,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         defaultValue: 'regular',
         values: ['regular', 'admin']
+      },
+      position: {
+        type: DataTypes.STRING,
+        defaultValue: 'Developer',
+        values: ['Developer', 'Lead', 'TL', 'EM', 'HEAD', 'CEO']
       }
     },
     {
@@ -45,5 +50,18 @@ module.exports = (sequelize, DataTypes) => {
       underscored: true
     }
   );
+
+  User.obtainPosition = score => {
+    let position; // eslint-disable-line
+    if (score <= 5) position = 'Developer';
+    else if (score <= 9) position = 'Lead';
+    else if (score <= 19) position = 'TL';
+    else if (score <= 29) position = 'EM';
+    else if (score <= 49) position = 'HEAD';
+    else position = 'CEO';
+
+    return position;
+  };
+
   return User;
 };
