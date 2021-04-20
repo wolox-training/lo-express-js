@@ -3,6 +3,7 @@ const logger = require('../logger/index');
 const helpers = require('../helpers/users');
 const { formatUserInput } = require('../mappers/users');
 const { findAndDecryptPassword } = require('../interactors/users');
+const { formatUserOutput } = require('../serializers/users');
 
 exports.signUp = async (req, res, next) => {
   try {
@@ -15,9 +16,9 @@ exports.signUp = async (req, res, next) => {
 
     const response = await UserService.createUser(payload);
 
-    logger.info(`User ${response.first_name} created succesfully`);
+    logger.info(`User ${response.firstName} created succesfully`);
 
-    return res.status(201).send(response);
+    return res.status(201).send(formatUserOutput(response));
   } catch (error) {
     logger.error(error);
     return next(error);
@@ -42,7 +43,8 @@ exports.getUsers = async (req, res, next) => {
     const { page, limit } = req.query;
     logger.info('Fetching all users from database');
     const allUsers = await UserService.getUsers(page, limit);
-    return res.status(200).send(allUsers);
+    const response = await allUsers.map(user => formatUserOutput(user));
+    return res.status(200).send(response);
   } catch (error) {
     logger.error(error);
     return next(error);
@@ -60,9 +62,9 @@ exports.signUpAdmin = async (req, res, next) => {
 
     const response = await UserService.createAdmin(payload);
 
-    logger.info(`Admin ${response.first_name} created succesfully`);
+    logger.info(`Admin ${response.firstName} created succesfully`);
 
-    return res.status(201).send(response);
+    return res.status(201).send(formatUserOutput(response));
   } catch (error) {
     logger.error(error);
     return next(error);
