@@ -39,6 +39,14 @@ exports.wrongDomainUser = {
   last_name: 'Ochoa'
 };
 
+exports.adminUser = {
+  email: 'test.test@wolox.co',
+  password: 'luis12345',
+  first_name: 'Luis',
+  last_name: 'Ochoa',
+  role: 'admin'
+};
+
 exports.pagination = {
   page: 1,
   limit: 1
