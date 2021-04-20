@@ -5,5 +5,5 @@ module.exports = {
     await queryInterface.addColumn('users', 'role', Sequelize.STRING);
   },
 
-  down: queryInterface => queryInterface.dropTable('users')
+  down: queryInterface => queryInterface.removeColumn('users', 'role')
 };

@@ -1,35 +1,7 @@
 module.exports = {
   '/users': {
-    get: {
-      tags: ['CRUD operations'],
-      description: 'Get users',
-      operationId: 'getUsers',
-      parameters: [
-        {
-          name: 'page',
-          in: 'query',
-          schema: {
-            type: 'integer',
-            default: 1
-          },
-          required: false
-        }
-      ],
-      responses: {
-        200: {
-          description: 'Users were obtained',
-          content: {
-            'application/json': {
-              schema: {
-                $ref: '#/components/schemas/Users'
-              }
-            }
-          }
-        }
-      }
-    },
     post: {
-      tags: ['CRUD operations'],
+      tags: ['User Operations'],
       description: 'Create user',
       operationId: 'createUser',
       parameters: [],
@@ -44,19 +16,33 @@ module.exports = {
         required: true
       },
       responses: {
-        200: {
+        201: {
           description: 'New user was created'
         },
         400: {
-          description: 'Invalid parameters',
+          description: 'There are missing fields on the request or password does not meet requirements',
           content: {
             'application/json': {
               schema: {
                 $ref: '#/components/schemas/Error'
               },
               example: {
-                message: 'User´s email already exists',
-                internal_code: 'invalid_parameters'
+                message: 'There are missing fields',
+                internal_code: 'bad_request_error'
+              }
+            }
+          }
+        },
+        409: {
+          description: 'There is already a user registered with the email entered.',
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/Error'
+              },
+              example: {
+                message: 'Trying to create a user that already exists',
+                internal_code: 'conflict_error'
               }
             }
           }
