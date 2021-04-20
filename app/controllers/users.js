@@ -3,6 +3,7 @@ const logger = require('../logger/index');
 const helpers = require('../helpers/users');
 const { formatUserInput } = require('../mappers/users');
 const { findAndDecryptPassword } = require('../interactors/users');
+const { formatUserOutput } = require('../serializers/users');
 
 exports.signUp = async (req, res, next) => {
   try {
@@ -13,11 +14,11 @@ exports.signUp = async (req, res, next) => {
 
     logger.info(`Starting sign up with email ${body.email}`);
 
-    const { firstName, lastName, email, createdAt } = await UserService.createUser(payload);
+    const response = await UserService.createUser(payload);
 
-    logger.info(`User ${firstName} created succesfully`);
+    logger.info(`User ${response.firstName} created succesfully`);
 
-    return res.status(201).send({ firstName, lastName, email, createdAt });
+    return res.status(201).send(formatUserOutput(response));
   } catch (error) {
     logger.error(error);
     return next(error);
@@ -29,8 +30,41 @@ exports.signIn = async (req, res, next) => {
     const { email, password } = req.body;
     await findAndDecryptPassword(email, password);
     logger.info(`Authenticating user with email: ${JSON.stringify(email)}`);
-    const { payload, token } = await helpers.generateToken(email);
+    const { payload, token } = helpers.generateToken(email);
     return res.status(200).send({ email: payload, token });
+  } catch (error) {
+    logger.error(error);
+    return next(error);
+  }
+};
+
+exports.getUsers = async (req, res, next) => {
+  try {
+    const { page, limit } = req.query;
+    logger.info('Fetching all users from database');
+    const allUsers = await UserService.getUsers(page, limit);
+    const response = await allUsers.map(user => formatUserOutput(user));
+    return res.status(200).send(response);
+  } catch (error) {
+    logger.error(error);
+    return next(error);
+  }
+};
+
+exports.signUpAdmin = async (req, res, next) => {
+  try {
+    const { body } = req;
+    const payload = formatUserInput(body);
+
+    payload.password = await helpers.encryptPayload(body.password);
+
+    logger.info(`Starting admin sign up with email ${body.email}`);
+
+    const response = await UserService.createAdmin(payload);
+
+    logger.info(`Admin ${response.firstName} created succesfully`);
+
+    return res.status(201).send(formatUserOutput(response));
   } catch (error) {
     logger.error(error);
     return next(error);

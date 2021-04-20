@@ -11,7 +11,8 @@ const statusCodes = {
   [errors.NOT_FOUND_ERROR]: 404,
   [errors.CONFLICT_ERROR]: 409,
   [errors.LOGIN_ERROR]: 403,
-  [errors.SCHEMA_ERROR]: 422
+  [errors.SCHEMA_ERROR]: 422,
+  [errors.AUTHORIZATION_ERROR]: 403
 };
 
 exports.handle = (error, req, res, next) => {
