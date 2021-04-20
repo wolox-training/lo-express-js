@@ -15,7 +15,7 @@ exports.checkExistingEmail = async (req, _, next) => {
   return next();
 };
 
-exports.verifyToken = (req, _, next) => {
+exports.verifyAuthentication = (req, _, next) => {
   try {
     const token = req.headers.authorization;
 

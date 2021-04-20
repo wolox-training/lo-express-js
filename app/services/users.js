@@ -2,7 +2,7 @@ const { User } = require('../models');
 const logger = require('../logger/index');
 const errors = require('../errors');
 const { formatUserOutput } = require('../serializers/users');
-const { admin_role } = require('../../config').common.database;
+const { adminRole } = require('../../config').common.database;
 
 exports.createUser = async payload => {
   try {
@@ -17,8 +17,7 @@ exports.createUser = async payload => {
 
 exports.getUsers = async (page, limit) => {
   try {
-    let offset = 0;
-    offset += (page - 1) * limit;
+    const offset = 0 + (page-1) * limit; // eslint-disable-line
     const allUsers = await User.findAll({ offset, limit });
 
     const response = await allUsers.map(user => formatUserOutput(user));
@@ -31,7 +30,7 @@ exports.getUsers = async (page, limit) => {
 
 exports.createAdmin = async payload => {
   try {
-    payload.role = admin_role;
+    payload.role = adminRole;
     const userCreated = await User.upsert(payload, { returning: true });
 
     return formatUserOutput(userCreated[0]);
