@@ -29,3 +29,13 @@ exports.verifyAuthentication = (req, _, next) => {
     return next(errors.loginError('Token invalid'));
   }
 };
+
+exports.verifyAdmin = async (req, _, next) => {
+  const { payload } = req.token;
+  const user = await User.findOne({ where: { email: payload } });
+
+  if (user.role !== 'admin') {
+    return next(errors.authorizationError('You are not authorized to access this resource'));
+  }
+  return next();
+};

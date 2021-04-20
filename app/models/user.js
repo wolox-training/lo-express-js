@@ -31,6 +31,11 @@ module.exports = (sequelize, DataTypes) => {
         validate: {
           len: [8, 61]
         }
+      },
+      role: {
+        type: DataTypes.STRING,
+        defaultValue: 'regular',
+        values: ['regular', 'admin']
       }
     },
     {

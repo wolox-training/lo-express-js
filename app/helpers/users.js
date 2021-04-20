@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 
 const logger = require('../logger/index');
 const errors = require('../errors');
-const { secret, token_ttl } = require('../../config').common.session;
+const { secret, tokenTTL } = require('../../config').common.session;
 
 exports.encryptPayload = async payload => {
   try {
@@ -18,7 +18,7 @@ exports.encryptPayload = async payload => {
 
 exports.generateToken = payload => {
   try {
-    const token = jwt.sign({ payload }, secret, { expiresIn: token_ttl });
+    const token = jwt.sign({ payload }, secret, { expiresIn: tokenTTL });
     logger.info('Token generated successfully');
     return { payload, token };
   } catch (error) {
