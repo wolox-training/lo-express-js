@@ -6,7 +6,7 @@ const errors = require('../errors');
 exports.findAndDecryptPassword = async (email, password) => {
   const user = await User.findOne({ where: { email } });
   if (user && (await bcrypt.compare(password, user.password))) {
-    return true;
+    return user;
   }
   throw errors.badRequestError('Wrong user or password');
 };

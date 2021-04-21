@@ -41,9 +41,13 @@ module.exports = (sequelize, DataTypes) => {
     {
       timestamps: true,
       tableName: 'users',
-      freezeTableName: true,
       underscored: true
     }
   );
+
+  User.associate = models => {
+    User.hasMany(models.Weet);
+  };
+
   return User;
 };
