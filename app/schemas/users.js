@@ -62,3 +62,22 @@ exports.signInSchema = {
     }
   }
 };
+
+exports.getUsersSchema = {
+  page: {
+    in: ['query'],
+    isInt: { options: { min: 1, max: 25 }, errorMessage: 'Page must be an integer between 1 and 25' },
+    isEmpty: {
+      negated: true,
+      errorMessage: 'Page is a required field'
+    }
+  },
+  limit: {
+    in: ['query'],
+    isInt: { options: { min: 1, max: 100 }, errorMessage: 'Limit must be an integer between 1 and 100' },
+    isEmpty: {
+      negated: true,
+      errorMessage: 'Limit is a required field'
+    }
+  }
+};
