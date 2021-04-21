@@ -1,5 +1,5 @@
 const logger = require('../logger/index');
-const { getRandomQuote, saveWeet, getAllWeets } = require('../services/weets');
+const { getRandomQuote, saveWeet, getAllWeets, rateWeet } = require('../services/weets');
 const { validateLength } = require('../helpers/weets');
 const { formatWeetOutput } = require('../serializers/weets');
 
@@ -22,6 +22,20 @@ exports.getWeets = async (req, res, next) => {
     logger.info('Fetching all weets from database');
     const allWeets = await getAllWeets(page, limit);
     const response = allWeets.map(user => formatWeetOutput(user));
+    return res.status(200).send(response);
+  } catch (error) {
+    logger.error(error);
+    return next(error);
+  }
+};
+
+exports.rateWeets = async (req, res, next) => {
+  try {
+    const { id: userId } = req.user;
+    const { id: weetId } = req.params;
+    const { score } = req.body;
+    const response = await rateWeet(userId, weetId, score);
+
     return res.status(200).send(response);
   } catch (error) {
     logger.error(error);
