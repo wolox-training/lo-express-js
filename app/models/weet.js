@@ -20,13 +20,11 @@ module.exports = (sequelize, DataTypes) => {
     {
       timestamps: true,
       tableName: 'weets',
-      freezeTableName: true,
       underscored: true
     }
   );
   Weet.associate = models => {
     Weet.belongsTo(models.User, { foreignKey: 'userId' });
-    models.User.hasMany(Weet);
   };
 
   return Weet;

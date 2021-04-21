@@ -22,7 +22,12 @@ exports.verifyAuthentication = (req, _, next) => {
     if (!token) {
       return next(errors.loginError('Unauthorized user'));
     }
-    req.token = jwt.verify(token, secret);
+    const {
+      payload: { email, id }
+    } = jwt.verify(token, secret);
+    req.email = email;
+    req.userId = id;
+    logger.info(`token generated for email: ${JSON.stringify(email)}`);
     return next();
   } catch (error) {
     logger.error(error);
@@ -31,23 +36,11 @@ exports.verifyAuthentication = (req, _, next) => {
 };
 
 exports.verifyAdmin = async (req, _, next) => {
-  const { payload } = req.token;
-  const user = await User.findOne({ where: { email: payload } });
+  const { email } = req;
+  const user = await User.findOne({ where: { email } });
 
   if (user.role !== 'admin') {
     return next(errors.authorizationError('You are not authorized to access this resource'));
   }
-  return next();
-};
-
-exports.idVerify = async (req, _, next) => {
-  const { payload } = req.token;
-  const user = await User.findOne({ where: { email: payload } });
-
-  if (!user) {
-    return next(errors.notFoundError('UserId not found'));
-  }
-
-  req.userId = user.id; // eslint-disable-line
   return next();
 };

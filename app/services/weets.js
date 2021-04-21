@@ -3,7 +3,6 @@ const logger = require('../logger');
 const { clientAPI, limit } = require('../../config').common.quoteAPI;
 const errors = require('../errors');
 const { Weet } = require('../models');
-const { formatWeetOutput } = require('../serializers/weets');
 
 exports.getRandomQuote = async () => {
   try {
@@ -28,7 +27,7 @@ exports.saveWeet = async (userId, content) => {
   try {
     const weetCreated = await Weet.create({ userId, content });
 
-    return formatWeetOutput(weetCreated);
+    return weetCreated;
   } catch (error) {
     logger.error(error);
     throw errors.databaseError('Something went wrong saving new Weet');
@@ -37,12 +36,10 @@ exports.saveWeet = async (userId, content) => {
 
 exports.getAllWeets = async (page, weetLimit) => {
   try {
-    let offset = 0;
-    offset += (page - 1) * weetLimit;
+    const offset = 0 + (page - 1) * weetLimit; // eslint-disable-line no-mixed-operators
     const allWeets = await Weet.findAll({ offset, limit: weetLimit });
 
-    const response = await allWeets.map(user => formatWeetOutput(user));
-    return response;
+    return allWeets;
   } catch (error) {
     logger.error(error);
     throw errors.databaseError('Error trying to fetch data from the DB');

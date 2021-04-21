@@ -46,7 +46,6 @@ module.exports = (sequelize, DataTypes) => {
     {
       timestamps: true,
       tableName: 'users',
-      freezeTableName: true,
       underscored: true
     }
   );
@@ -61,6 +60,10 @@ module.exports = (sequelize, DataTypes) => {
     else position = 'CEO';
 
     return position;
+  };
+
+  User.associate = models => {
+    User.hasMany(models.Weet);
   };
 
   return User;
