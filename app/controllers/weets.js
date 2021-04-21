@@ -21,7 +21,7 @@ exports.getWeets = async (req, res, next) => {
     const { page, limit } = req.query;
     logger.info('Fetching all weets from database');
     const allWeets = await getAllWeets(page, limit);
-    const response = await allWeets.map(user => formatWeetOutput(user));
+    const response = allWeets.map(user => formatWeetOutput(user));
     return res.status(200).send(response);
   } catch (error) {
     logger.error(error);
