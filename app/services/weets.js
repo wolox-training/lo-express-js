@@ -3,6 +3,7 @@ const logger = require('../logger');
 const { clientAPI, limit } = require('../../config').common.quoteAPI;
 const errors = require('../errors');
 const { Weet, Rating, User, sequelize } = require('../models');
+const { obtainPosition } = require('../helpers/users');
 
 exports.getRandomQuote = async () => {
   try {
@@ -46,31 +47,28 @@ exports.getAllWeets = async (page, weetLimit) => {
   }
 };
 
-exports.rateWeet = async (ratingUserId, weetId, score) => {
+exports.rateWeet = async (ratingUserId, weetId, score, weetData) => {
   let transaction = {};
   try {
     transaction = await sequelize.transaction();
 
     const payload = { ratingUserId, weetId, score };
 
-    logger.info('Searching if the weet was rated before');
-    const isRated = await Rating.findOne({ where: payload });
-    if (!isRated) throw errors.badRequestError('User already submitted this exact rate');
-
-    logger.info('Searching if the weet exists');
-    const weetExists = await Weet.findOne({ where: { id: weetId } });
-    if (!weetExists) throw errors.badRequestError('The weet does not exist');
-
     logger.info('Creating rate on database');
     const rateCreated = await Rating.upsert(payload, { returning: true }, { transaction });
 
     logger.info('Updating position if necessary');
-    const weetUser = await User.findOne({ where: { id: weetExists.userId } });
+    const weetUser = await User.findOne({ where: { id: weetData.userId } });
 
-    const totalScore = await Rating.sum('score', { where: { ratingUserId: weetExists.userId }, transaction });
-    const position = User.obtainPosition(totalScore);
+    const totalScore = await Rating.sum('score', { where: { weetId } });
+    const position = obtainPosition(totalScore);
 
     logger.info(`Position of ${weetUser.email} is ${position}`);
+
+    if (position !== weetUser.position) {
+      weetUser.position = position;
+      await weetUser.save({ transaction });
+    }
 
     await transaction.commit();
 
