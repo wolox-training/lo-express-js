@@ -33,3 +33,15 @@ exports.saveWeet = async (userId, content) => {
     throw errors.databaseError('Something went wrong saving new Weet');
   }
 };
+
+exports.getAllWeets = async (page, weetLimit) => {
+  try {
+    const offset = 0 + (page - 1) * weetLimit; // eslint-disable-line no-mixed-operators
+    const allWeets = await Weet.findAll({ offset, limit: weetLimit });
+
+    return allWeets;
+  } catch (error) {
+    logger.error(error);
+    throw errors.databaseError('Error trying to fetch data from the DB');
+  }
+};
