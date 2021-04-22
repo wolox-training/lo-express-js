@@ -28,10 +28,10 @@ exports.signUp = async (req, res, next) => {
 exports.signIn = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    await findAndDecryptPassword(email, password);
+    const { id } = await findAndDecryptPassword(email, password);
     logger.info(`Authenticating user with email: ${JSON.stringify(email)}`);
-    const { payload, token } = helpers.generateToken(email);
-    return res.status(200).send({ email: payload, token });
+    const { payload, token } = helpers.generateToken({ email, id });
+    return res.status(200).send({ email: payload.email, token });
   } catch (error) {
     logger.error(error);
     return next(error);

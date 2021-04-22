@@ -50,7 +50,8 @@ const config = {
     },
     quoteAPI: {
       limit: process.env.API_LIMIT,
-      clientAPI: process.env.API_QUOTE_URL
+      clientAPI: process.env.API_QUOTE_URL,
+      maxLength: process.env.WEET_MAX_LENGTH
     }
   }
 };

@@ -22,7 +22,9 @@ exports.verifyAuthentication = (req, _, next) => {
     if (!token) {
       return next(errors.loginError('Unauthorized user'));
     }
-    req.token = jwt.verify(token, secret);
+    const { payload } = jwt.verify(token, secret);
+    req.user = payload;
+    logger.info(`token generated for email: ${JSON.stringify(payload.email)}`);
     return next();
   } catch (error) {
     logger.error(error);
@@ -31,8 +33,8 @@ exports.verifyAuthentication = (req, _, next) => {
 };
 
 exports.verifyAdmin = async (req, _, next) => {
-  const { payload } = req.token;
-  const user = await User.findOne({ where: { email: payload } });
+  const { email } = req.user;
+  const user = await User.findOne({ where: { email } });
 
   if (user.role !== 'admin') {
     return next(errors.authorizationError('You are not authorized to access this resource'));

@@ -1,5 +1,6 @@
 const { healthCheck } = require('./controllers/healthCheck');
 const { signUp, signIn, getUsers, signUpAdmin } = require('./controllers/users');
+const { createWeet } = require('./controllers/weets');
 const { userSchema, signInSchema, getUsersSchema } = require('./schemas/users');
 const { checkExistingEmail, verifyAuthentication, verifyAdmin } = require('./middlewares/validators/users');
 const { validateBySchema } = require('./middlewares/validators/schemaValidators');
@@ -12,4 +13,6 @@ exports.init = app => {
   app.post('/users/sessions', [validateBySchema(signInSchema)], signIn);
 
   app.post('/admin/users', [validateBySchema(userSchema), verifyAuthentication, verifyAdmin], signUpAdmin);
+
+  app.post('/weets', [verifyAuthentication], createWeet);
 };
