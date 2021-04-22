@@ -26,16 +26,12 @@ module.exports = (sequelize, DataTypes) => {
     {
       timestamps: true,
       tableName: 'ratings',
-      freezeTableName: true,
       underscored: true
     }
   );
   Rating.associate = models => {
     Rating.belongsTo(models.User, { foreignKey: 'ratingUserId' });
-    models.User.hasMany(Rating);
-
     Rating.belongsTo(models.Weet, { foreignKey: 'weetId' });
-    models.Weet.hasMany(Rating);
   };
 
   return Rating;
