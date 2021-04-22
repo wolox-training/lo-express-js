@@ -2,7 +2,7 @@ const UserService = require('../services/users');
 const logger = require('../logger/index');
 const helpers = require('../helpers/users');
 const { formatUserInput } = require('../mappers/users');
-const { findAndDecryptPassword } = require('../interactors/users');
+const { findAndDecryptPassword, saveToken } = require('../interactors/users');
 const { formatUserOutput } = require('../serializers/users');
 
 exports.signUp = async (req, res, next) => {
@@ -31,6 +31,8 @@ exports.signIn = async (req, res, next) => {
     const { id } = await findAndDecryptPassword(email, password);
     logger.info(`Authenticating user with email: ${JSON.stringify(email)}`);
     const { payload, token } = helpers.generateToken({ email, id });
+    const savedToken = await saveToken(payload, token);
+    logger.info(`Token saved in database: ${JSON.stringify(savedToken)}`);
     return res.status(200).send({ email: payload.email, token });
   } catch (error) {
     logger.error(error);
@@ -65,6 +67,19 @@ exports.signUpAdmin = async (req, res, next) => {
     logger.info(`Admin ${response.firstName} created succesfully`);
 
     return res.status(201).send(formatUserOutput(response));
+  } catch (error) {
+    logger.error(error);
+    return next(error);
+  }
+};
+
+exports.invalidateAll = async (req, res, next) => {
+  try {
+    const { id } = req.user;
+
+    const deletedTokens = await UserService.invalidateAll(id);
+    logger.info(`The number of tokens deleted are: ${deletedTokens}`);
+    return res.status(200).send({ message: 'tokens deleted successfully' });
   } catch (error) {
     logger.error(error);
     return next(error);

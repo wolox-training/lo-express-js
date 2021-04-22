@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-const { User } = require('../../models');
+const { User, Token } = require('../../models');
 const errors = require('../../errors');
 const { secret } = require('../../../config').common.session;
 const logger = require('../../logger');
@@ -15,7 +15,7 @@ exports.checkExistingEmail = async (req, _, next) => {
   return next();
 };
 
-exports.verifyAuthentication = (req, _, next) => {
+exports.verifyAuthentication = async (req, _, next) => {
   try {
     const token = req.headers.authorization;
 
@@ -24,7 +24,9 @@ exports.verifyAuthentication = (req, _, next) => {
     }
     const { payload } = jwt.verify(token, secret);
     req.user = payload;
-    logger.info(`token generated for email: ${JSON.stringify(payload.email)}`);
+    const isValid = await Token.findOne({ where: { userId: req.user.id, token } });
+    if (!isValid) next(errors.loginError('This token is not valid'));
+    logger.info(`token validated successfully for email: ${JSON.stringify(payload.email)}`);
     return next();
   } catch (error) {
     logger.error(error);
