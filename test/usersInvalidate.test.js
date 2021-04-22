@@ -36,7 +36,7 @@ describe('POST /users/sessions/invalidate_all - Invalidate token', () => {
   });
 
   it('Should display a message', () => {
-    expect(message).toBe('tokens deleted successfully');
+    expect(message).toBe('All sessions invalidated successfully');
   });
 
   it('Should return status code 200', () => {
