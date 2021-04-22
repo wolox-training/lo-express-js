@@ -79,7 +79,7 @@ exports.invalidateAll = async (req, res, next) => {
 
     const deletedTokens = await UserService.invalidateAll(id);
     logger.info(`The number of tokens deleted are: ${deletedTokens}`);
-    return res.status(200).send({ message: 'tokens deleted successfully' });
+    return res.status(200).send({ message: 'all sessions invalidated successfully' });
   } catch (error) {
     logger.error(error);
     return next(error);
