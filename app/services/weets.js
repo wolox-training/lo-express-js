@@ -72,7 +72,7 @@ exports.rateWeet = async (ratingUserId, weetId, score, weetData) => {
 
     await transaction.commit();
 
-    return rateCreated;
+    return rateCreated[0];
   } catch (error) {
     if (transaction.rollback) await transaction.rollback();
     logger.error(error);

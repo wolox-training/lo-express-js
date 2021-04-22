@@ -1,7 +1,7 @@
 const logger = require('../logger/index');
 const { getRandomQuote, saveWeet, getAllWeets, rateWeet } = require('../services/weets');
 const { validateLength } = require('../helpers/weets');
-const { formatWeetOutput } = require('../serializers/weets');
+const { formatWeetOutput, formatRateOutput } = require('../serializers/weets');
 const { ratingValidations } = require('../interactors/weets');
 
 exports.createWeet = async (req, res, next) => {
@@ -39,7 +39,7 @@ exports.rateWeets = async (req, res, next) => {
     const WeetData = await ratingValidations(ratingUserId, weetId, score);
     const response = await rateWeet(ratingUserId, weetId, score, WeetData);
 
-    return res.status(200).send(response);
+    return res.status(200).send(formatRateOutput(response));
   } catch (error) {
     logger.error(error);
     return next(error);
