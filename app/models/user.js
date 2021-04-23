@@ -36,6 +36,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         defaultValue: 'regular',
         values: ['regular', 'admin']
+      },
+      position: {
+        type: DataTypes.STRING,
+        defaultValue: 'Developer',
+        values: ['Developer', 'Lead', 'TL', 'EM', 'HEAD', 'CEO']
       }
     },
     {
