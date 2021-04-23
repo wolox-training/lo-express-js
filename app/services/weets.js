@@ -84,6 +84,6 @@ exports.rateWeet = async (ratingUserId, weetId, score, weetData) => {
   } catch (error) {
     if (transaction.rollback) await transaction.rollback();
     logger.error(error);
-    throw error;
+    throw errors.databaseError('An error ocurred accessing the database');
   }
 };

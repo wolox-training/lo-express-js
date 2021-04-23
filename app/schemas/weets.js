@@ -42,7 +42,7 @@ exports.rateWeetSchema = {
       errorMessage: 'Score has to be a number'
     },
     matches: {
-      options: /^-?[1]+$/,
+      options: /^-?[1]$/,
       errorMessage: 'Score must be either 1 or -1'
     }
   }
