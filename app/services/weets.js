@@ -49,13 +49,21 @@ exports.getAllWeets = async (page, weetLimit) => {
 
 exports.rateWeet = async (ratingUserId, weetId, score, weetData) => {
   let transaction = {};
+  let rateResponse = {};
   try {
     transaction = await sequelize.transaction();
 
     const payload = { ratingUserId, weetId, score };
 
-    logger.info('Creating rate on database');
-    const rateCreated = await Rating.upsert(payload, { returning: true }, { transaction });
+    logger.info('Finding if it is an update or a create');
+    const isRatedWithDifValue = await Rating.findOne({ where: { ratingUserId, weetId } });
+
+    if (isRatedWithDifValue) {
+      isRatedWithDifValue.score = score;
+      rateResponse = await isRatedWithDifValue.save({ transaction });
+    } else {
+      rateResponse = await Rating.create(payload, { transaction });
+    }
 
     logger.info('Updating position if necessary');
     const weetUser = await User.findOne({ where: { id: weetData.userId } });
@@ -72,7 +80,7 @@ exports.rateWeet = async (ratingUserId, weetId, score, weetData) => {
 
     await transaction.commit();
 
-    return rateCreated[0];
+    return rateResponse;
   } catch (error) {
     if (transaction.rollback) await transaction.rollback();
     logger.error(error);

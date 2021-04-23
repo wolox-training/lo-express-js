@@ -19,3 +19,7 @@ exports.badLimitPagination = {
   page: 1,
   limit: 101
 };
+
+exports.weetNotExistent = {
+  weetId: 20
+};
