@@ -1,4 +1,4 @@
-const { User } = require('../models');
+const { User, Token } = require('../models');
 const logger = require('../logger/index');
 const errors = require('../errors');
 const { adminRole } = require('../../config').common.database;
@@ -34,5 +34,15 @@ exports.createAdmin = async payload => {
   } catch (error) {
     logger.error(error);
     throw errors.databaseError('Something went wrong trying to save into the DB');
+  }
+};
+
+exports.invalidateAll = async id => {
+  try {
+    const deletedTokens = await Token.destroy({ where: { userId: id } });
+    return deletedTokens;
+  } catch (error) {
+    logger.error(error);
+    throw errors.databaseError('Something went wrong trying to delete tokens in the DB');
   }
 };
