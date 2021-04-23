@@ -52,7 +52,7 @@ module.exports = (sequelize, DataTypes) => {
 
   User.associate = models => {
     User.hasMany(models.Weet);
-    User.hasMany(models.Rating);
+    User.hasMany(models.Token);
   };
 
   return User;
