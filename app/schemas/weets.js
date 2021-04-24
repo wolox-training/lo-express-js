@@ -30,3 +30,20 @@ exports.getAllWeetsSchema = {
     errorMessage: 'Problem with limit param'
   }
 };
+
+exports.rateWeetSchema = {
+  score: {
+    in: ['body'],
+    isEmpty: {
+      negated: true,
+      errorMessage: 'Score is a required param'
+    },
+    isInt: {
+      errorMessage: 'Score has to be a number'
+    },
+    matches: {
+      options: /^-?[1]$/,
+      errorMessage: 'Score must be either 1 or -1'
+    }
+  }
+};
